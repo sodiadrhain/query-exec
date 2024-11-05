@@ -16,18 +16,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
-    register: builder.mutation({
-      query: (data) => ({
-        url: `${AUTH_URL}/register`,
-        method: 'POST',
-        body: data,
-      }),
-    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useLogoutMutation,
-  useRegisterMutation,
 } = authApiSlice;

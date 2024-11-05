@@ -19,16 +19,4 @@ export interface IUser {
     updatedAt?: Date;
     createdAt?: Date;
   }
-
-  export interface ISession {
-    _id?: string;
-    userId?: string;
-    userAgent?: string;
-    clientIp?: string;
-    refreshTokenCount?: number;
-    isBlocked?: string;
-    expiresAt?: Date;
-    updatedAt?: Date;
-    createdAt?: Date;
-  }
   

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
@@ -46,8 +45,8 @@ const ProfileScreen = () => {
     }
   };
   return (
-    <FormContainer>
-      <h1>Update Profile</h1>
+    <><br /><br /><FormContainer>
+      <h3>Update Profile</h3>
 
       <Form onSubmit={submitHandler}>
         <Form.Group className='my-2' controlId='name'>
@@ -94,7 +93,7 @@ const ProfileScreen = () => {
 
         {isLoading && <Loader />}
       </Form>
-    </FormContainer>
+    </FormContainer></>
   );
 };
 

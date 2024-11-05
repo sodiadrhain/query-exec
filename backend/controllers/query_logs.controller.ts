@@ -11,18 +11,19 @@ class QueryLogController {
    */
   create = async (req: Request, res: Response) => {
     const { type, query } = req.body;
-    let status, isApproved = false
+    let status, isApproved: boolean;
     let queryResult;
+    let queryType = type.toUpperCase();
 
-    if (!query.includes(type)) {
-        return res.badRequest(`Query passed is not of ${type.toUpperCase()} type`)
+    if (!query.includes(queryType)) {
+        return res.badRequest(`Query passed is not of ${queryType} type`)
     }
 
     try {
         const user = await userService.getUser({_id: req.user.userId});
 
-        if (type === "SELECT" && user.permissions.includes("SELECT")) {
-            queryResult = await new QueryDbService(query.query).exec();
+        if (queryType === "SELECT" && user.permissions.includes("SELECT")) {
+            queryResult = await new QueryDbService(query).exec();
             status = true;
             isApproved = true;
         }

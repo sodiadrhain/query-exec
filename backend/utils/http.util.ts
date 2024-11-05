@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import { log } from "../services";
 import { RESPONSE_MSG, STATUS_CODES } from "../types/enums";
 import { IRequestUser } from "../interfaces";
-import { APP } from "../config/env.config";
 
 declare module "express-serve-static-core" {
   interface Response {
@@ -88,8 +87,8 @@ function formatRequest(request: Request) {
     request.body.password = "******";
   }
 
-  if (request.headers[APP.AUTH_HEADER]) {
-    request.headers[APP.AUTH_HEADER] = "******";
+  if (request.headers.cookie) {
+    request.headers.cookie = "******";
   }
 
   return JSON.stringify({

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginMutation } from '../slices/authApiSlice';
@@ -37,8 +37,6 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
-
       <Form onSubmit={submitHandler}>
         <Form.Group className='my-2' controlId='email'>
           <Form.Label>Email Address</Form.Label>
@@ -61,6 +59,7 @@ const LoginScreen = () => {
             required
           ></Form.Control>
         </Form.Group>
+        <div className="d-grid gap-2">
         <Button
           disabled={isLoading}
           type='submit'
@@ -69,13 +68,8 @@ const LoginScreen = () => {
         >
           Login
         </Button>
+        </div>
       </Form>
-
-      <Row className='py-3'>
-        <Col>
-          New Here? <Link to='/register'>Register</Link>
-        </Col>
-      </Row>
     </FormContainer>
   );
 };

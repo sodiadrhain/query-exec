@@ -53,20 +53,6 @@ class AuthValidator {
       },
     })
   );
-
-  refreshToken = validate(
-    checkSchema({
-      token: {
-        in: ["body"],
-        notEmpty: {
-          errorMessage: "Token is required",
-        },
-        isString: {
-          errorMessage: "Token must be a string",
-        },
-      },
-    })
-  );
 }
 
 export default AuthValidator;
