@@ -1,6 +1,6 @@
 import Express, { Router } from "express";
 import { queryLogController } from "../../controllers";
-import { queryLogValidator } from "../../validators"
+import { queryLogValidator } from "../../validators";
 
 const router: Router = Express.Router();
 

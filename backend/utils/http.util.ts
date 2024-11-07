@@ -66,7 +66,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
   res.serverError = (data: unknown, message: string = RESPONSE_MSG.ERROR_OCURRED) => {
     log.error(`${message}, ${data}, ${formatRequest(req)}`);
-     res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
+    res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       status: RESPONSE_MSG.STATUS_ERROR,
       message,
     });

@@ -13,7 +13,7 @@ export default class PaginationService<T> {
    * @param  {string} parameters
    * @return {object}
    */
-  static extractQuery = (parameters: object | any, fields: string[] = []) => {
+  static extractQuery = (parameters: object | any, fields: string[] = []): object => {
     if (parameters == null) return null;
 
     const query: Record<string, unknown> = {};
@@ -38,8 +38,8 @@ export default class PaginationService<T> {
       limit,
       q,
       projections,
-      sort,
-    //   query,
+      // sort,
+      //   query,
       populate,
     } = options;
 
@@ -61,7 +61,7 @@ export default class PaginationService<T> {
         .find(query, projections)
         .skip(pp * (p - 1))
         .limit(pp)
-        .sort({ createdAt: "desc"})
+        .sort({ createdAt: "desc" })
         .populate(populate)
         .lean()
         .exec(),
@@ -75,7 +75,7 @@ export default class PaginationService<T> {
     const pages = paginate(p, pp, total);
     return {
       data: second!.value || [],
-      meta: {...pages},
+      meta: { ...pages },
     };
   }
 }

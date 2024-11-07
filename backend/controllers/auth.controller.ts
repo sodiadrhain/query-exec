@@ -33,15 +33,15 @@ class AuthController {
         return res.badRequest("User does not exist");
       }
 
-      const verifyPassword = decryptPassword(password, (user.password));
+      const verifyPassword = decryptPassword(password, user.password);
       if (!verifyPassword) {
         return res.badRequest("Invalid credentials");
       }
 
       const dateNow = new Date();
-      await userService.updateUser(user, {lastLogin: dateNow})
+      await userService.updateUser(user, { lastLogin: dateNow });
 
-      generateToken(res, user)
+      generateToken(res, user);
 
       user.password = undefined;
 
@@ -58,7 +58,7 @@ class AuthController {
    */
   logout = async (_: Request, res: Response) => {
     try {
-      res.clearCookie('accessToken');
+      res.clearCookie("accessToken");
       res.ok(null, "Logout successful");
     } catch (error) {
       res.serverError(error);

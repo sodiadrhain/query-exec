@@ -21,8 +21,8 @@ export const generateToken = (res: Response, user: IUser): string => {
   res.cookie("accessToken", token, {
     httpOnly: true,
     secure: APP.ENV !== ENVIRONMENT.development,
-    sameSite: 'strict',
-    maxAge: expires * 1000
+    sameSite: "strict",
+    maxAge: expires * 1000,
   });
 
   return token;

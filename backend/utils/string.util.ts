@@ -4,17 +4,17 @@
  * @return {boolean} - The result.
  */
 export const isEmptyObject = (obj: object): boolean => {
-    return obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype;
+  return obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype;
 };
 
-export const checkLimitInQuery = (query: string, limit: number = 1000) => {
-    const limitPattern = /LIMIT\s+(\d+)/i;
-    const match = query.match(limitPattern);
+export const checkLimitInQuery = (query: string, limit = 1000) => {
+  const limitPattern = /LIMIT\s+(\d+)/i;
+  const match = query.match(limitPattern);
 
-    // Check if a LIMIT clause is found and > limit value passed
-    if (match && parseInt(match[1], 10) > limit) {
-      return true;
-    }
-  
-    return false;
+  // Check if a LIMIT clause is found and > limit value passed
+  if (match && parseInt(match[1], 10) > limit) {
+    return true;
   }
+
+  return false;
+};

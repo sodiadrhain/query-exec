@@ -6,13 +6,13 @@ import { paginate } from "./pagination.util";
 import { isEmptyObject, checkLimitInQuery } from "./string.util";
 
 export {
-    HttpHandler,
-    validate,
-    hashPassword,
-    decryptPassword,
-    generateToken,
-    decodeToken,
-    paginate,
-    isEmptyObject,
-    checkLimitInQuery
-  };
+  HttpHandler,
+  validate,
+  hashPassword,
+  decryptPassword,
+  generateToken,
+  decodeToken,
+  paginate,
+  isEmptyObject,
+  checkLimitInQuery,
+};

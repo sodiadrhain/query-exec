@@ -1,4 +1,4 @@
-import { IQueryLogs, IUser, IPaginationOptions } from "../interfaces";
+import { IQueryLogs } from "../interfaces";
 import { QueryLogs } from "../models";
 import PaginationService from "./pagination.service";
 
@@ -9,7 +9,6 @@ class QueryLogService {
     this.pagination = new PaginationService(QueryLogs);
   }
 
-  
   // CreateQueryLog :one
   public createQueryLog(ql: IQueryLogs): Promise<IQueryLogs> {
     return QueryLogs.create(ql);
@@ -21,7 +20,7 @@ class QueryLogService {
   }
 
   // ListQueryLogs :many
-   public listQueryLogs(query: object) {
+  public listQueryLogs(query: object) {
     return this.pagination.paginate({ ...query }, ["isApproved", "status"]);
   }
 

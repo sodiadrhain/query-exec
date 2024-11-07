@@ -47,7 +47,7 @@ class UserController {
 
       const updatedUser = await userService.updateUser(user, {
         fullName,
-        password: hashPassword(password)
+        password: hashPassword(password),
       });
 
       res.ok(updatedUser, "User profile updated successfully");
@@ -55,7 +55,6 @@ class UserController {
       res.serverError(error);
     }
   };
-
 }
 
 export default UserController;
