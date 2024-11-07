@@ -8,8 +8,14 @@ const QueryLogsSchema = new Schema<IQueryLogs>(
     userId: Schema.Types.ObjectId,
     type: String,
     query: String,
-    isApproved: Boolean,
-    status: Boolean,
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
+    status: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

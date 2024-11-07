@@ -191,7 +191,7 @@ const QueryExecScreen = () => {
                           <td>{query.query}</td>
                           <td>{new Date(query.createdAt).toLocaleString()}</td>
                           <td>
-                            {userInfo.permissions.includes(`APPROVE_${query.type}`) && (
+                            {userInfo.permissions.includes(`APPROVE_${query.type.toUpperCase()}`) && (
                               <Button
                                 type='button'
                                 variant='primary'

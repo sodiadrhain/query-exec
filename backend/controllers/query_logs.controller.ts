@@ -11,7 +11,7 @@ class QueryLogController {
    */
   create = async (req: Request, res: Response) => {
     const { type, query } = req.body;
-    let status, isApproved: boolean;
+    let isApproved: boolean;
     let queryResult;
     let queryType = type.toUpperCase();
 
@@ -29,14 +29,12 @@ class QueryLogController {
 
         if (queryType === "SELECT" && user.permissions.includes("SELECT")) {
             queryResult = await new QueryDbService(query).exec();
-            status = true;
             isApproved = true;
         }
 
       const newQuerylog = await queryLogService.createQueryLog({
         type,
         query,
-        status,
         isApproved,
         userId: req.user.userId,
       });
@@ -118,11 +116,10 @@ class QueryLogController {
 
         const user = await userService.getUser({_id: req.user.userId});
 
-        if (user.permissions.includes(`APPROVE_${query.type}`)) {
-            const _ = await new QueryDbService(query.query).exec();
+        if (user.permissions.includes(`APPROVE_${query.type.toUpperCase()}`)) {
             // Update query status
-            await queryLogService.updateQueryLog({_id: query._id}, {isApproved: true, status: true})
-            return res.ok(query._id, "Query executed successfully");
+            await queryLogService.updateQueryLog({_id: query._id}, {isApproved: true})
+            return res.ok(query._id, "Query approved successfully");
         }
 
         res.badRequest("You do not the right permisions to approve this query");
