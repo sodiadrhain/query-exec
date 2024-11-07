@@ -4,9 +4,10 @@ const QUERY_URL = '/api/query'
 export const queryApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getQueries: builder.mutation({
-      query: () => ({
+      query: (data) => ({
         url: `${QUERY_URL}`,
         method: 'GET',
+        params: {...data, limit: 100}
       }),
     }),
     createQuery: builder.mutation({
@@ -18,17 +19,23 @@ export const queryApiSlice = apiSlice.injectEndpoints({
     }),
     approveQuery: builder.mutation({
       query: (data) => ({
-        url: `${QUERY_URL}/${data.id}/approve`,
+        url: `${QUERY_URL}/${data._id}/approve`,
         method: 'PUT',
       }),
     }),
     updateQuery: builder.mutation({
         query: (data) => ({
-          url: `${QUERY_URL}/${data.id}/update`,
+          url: `${QUERY_URL}/${data._id}/update`,
           method: 'PUT',
           body: data
         }),
-      }),
+    }),
+    runQuery: builder.mutation({
+        query: (data) => ({
+          url: `${QUERY_URL}/${data._id}/run`,
+          method: 'GET',
+        }),
+    }),
   }),
 });
 
@@ -37,4 +44,5 @@ export const {
   useCreateQueryMutation,
   useApproveQueryMutation,
   useUpdateQueryMutation,
+  useRunQueryMutation,
 } = queryApiSlice;

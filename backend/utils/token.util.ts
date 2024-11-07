@@ -5,8 +5,7 @@ import { Response } from "express";
 import { ENVIRONMENT } from "../types/enums";
 
 export const generateToken = (res: Response, user: IUser): string => {
-  const dateNow = new Date();
-  const expires = dateNow.setSeconds(dateNow.getSeconds() + Number(JWT.EXPIRY))
+  const expires = Number(JWT.EXPIRY);
 
   const token = jwt.sign(
     {
@@ -23,7 +22,7 @@ export const generateToken = (res: Response, user: IUser): string => {
     httpOnly: true,
     secure: APP.ENV !== ENVIRONMENT.development,
     sameSite: 'strict',
-    maxAge: expires
+    maxAge: expires * 1000
   });
 
   return token;

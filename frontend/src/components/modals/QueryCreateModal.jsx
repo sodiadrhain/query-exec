@@ -3,7 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
-import { useCreateQueryMutation } from '../../slices/queryApiSlice';
+import { useCreateQueryMutation, useGetQueriesMutation } from '../../slices/queryApiSlice';
+import { setQueryData } from '../../slices/authenticatedSlice';
+import { useDispatch } from 'react-redux';
 
 const QueryCreateModal = ({ show, handleClose }) => {
     const [type, setType] = useState('');
@@ -11,11 +13,14 @@ const QueryCreateModal = ({ show, handleClose }) => {
     const [queryResult, setQueryResult] = useState(null);
 
     const [createQuery, { isLoading }] = useCreateQueryMutation();
+    const [fetchAllQueries] = useGetQueriesMutation();
+    const dispatch = useDispatch();
 
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
           const res = await createQuery({ type, query }).unwrap();
+          fetchQueries();
           toast.success(res?.message);
           if (res.data.result && res.data.result.length > 0) {
             setQueryResult(res.data.result)
@@ -27,18 +32,21 @@ const QueryCreateModal = ({ show, handleClose }) => {
         }
       };
 
+      const fetchQueries = async () => {
+        try {
+            const res = await fetchAllQueries().unwrap();
+            dispatch(setQueryData({ ...res }));
+          } catch (err) {
+            console.log("Failed to fetch query data")
+          }
+      }
+
       const onClose = () => {
         setType("")
         setQuery("")
         setQueryResult(null)
         handleClose();
       }
-
-      const prettyPrint = () => {
-        const obj = JSON.parse(queryResult);
-        const pretty = JSON.stringify(obj, undefined, 4);
-        return pretty;
-    }
 
   return (
     <Modal show={show} onHide={onClose} backdrop="static">

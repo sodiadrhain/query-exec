@@ -8,5 +8,6 @@ router.post("/", queryLogValidator.create, queryLogController.create);
 router.get("/", queryLogController.get);
 router.put("/:id/update", queryLogValidator.update, queryLogController.update);
 router.put("/:id/approve", queryLogValidator.approve, queryLogController.approve);
+router.get("/:id/run", queryLogController.run);
 
 export default router;

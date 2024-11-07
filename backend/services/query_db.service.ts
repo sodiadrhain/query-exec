@@ -42,6 +42,7 @@ class QueryDbService {
                     reject(err);
                 }
                 resolve(result);
+                connection.destroy();
             });
         });
     };

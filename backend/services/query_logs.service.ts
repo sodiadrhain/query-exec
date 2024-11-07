@@ -1,7 +1,15 @@
 import { IQueryLogs, IUser, IPaginationOptions } from "../interfaces";
 import { QueryLogs } from "../models";
+import PaginationService from "./pagination.service";
 
 class QueryLogService {
+  private pagination: PaginationService<IQueryLogs>;
+
+  constructor() {
+    this.pagination = new PaginationService(QueryLogs);
+  }
+
+  
   // CreateQueryLog :one
   public createQueryLog(ql: IQueryLogs): Promise<IQueryLogs> {
     return QueryLogs.create(ql);
@@ -13,19 +21,8 @@ class QueryLogService {
   }
 
   // ListQueryLogs :many
-   public listQueryLogs(
-    arg: IPaginationOptions<IQueryLogs>
-  ) {
-    return QueryLogs.find({...arg.query}).skip(arg.limit * (arg.page - 1))
-    .limit(arg.limit)
-    .sort({ createdAt: "desc" })
-    .lean()
-    .exec()
-  }
-
-  // ListUserQueryLogs :many DESC
-  public getQueryLogByUserId(user: IUser): Promise<IQueryLogs[]> {
-    return QueryLogs.find({ userId: user._id }).sort({ createdAt: "desc" })
+   public listQueryLogs(query: object) {
+    return this.pagination.paginate({ ...query }, ["isApproved", "status"]);
   }
 
   // UpdateQueryLog :one

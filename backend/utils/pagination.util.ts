@@ -7,15 +7,15 @@
  * @returns
  */
 export const paginate = (
-    pages: number,
     page = 1,
     perPage = 10,
+    pages: number,
   ): {
     current: number;
     prev: number | null;
     next: number | null;
     pages: number;
-    totalItems: number;
+    total: number;
   } => {
     const sumOfPages = Math.ceil(pages / perPage);
     return {
@@ -23,6 +23,6 @@ export const paginate = (
       prev: page > 1 ? page - 1 : null,
       next: page < sumOfPages ? page + 1 : null,
       pages: sumOfPages,
-      totalItems: pages,
+      total: pages,
     };
   };

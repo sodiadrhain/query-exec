@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { queryLogService, userService } from "../services";
-import { paginate, isEmptyObject } from "../utils";
+import { isEmptyObject, checkLimitInQuery } from "../utils";
 import QueryDbService from "../services/query_db.service";
 
 class QueryLogController {
@@ -18,6 +18,11 @@ class QueryLogController {
     if (!query.includes(queryType)) {
         return res.badRequest(`Query passed is not of ${queryType} type`)
     }
+
+     // Check if a LIMIT clause is passed and return is > 1000
+     if (checkLimitInQuery(query, 1000)) {
+        return res.badRequest("Query LIMIT must not be greater than 1000")
+     }
 
     try {
         const user = await userService.getUser({_id: req.user.userId});
@@ -49,21 +54,12 @@ class QueryLogController {
    * @access Private.
    */
   get = async (req: Request, res: Response) => {
-    const { limit, page } = req.query;
-    const pageLimit = Number(limit) || 10;
-    const pageNumber = Number(page) || 1;
+    const query = req.query;
 
     try {
-      const queryLogs = await queryLogService.listQueryLogs({
-        limit: pageLimit,
-        page: pageNumber,
-      });
+      const queryLogs = await queryLogService.listQueryLogs(query);
 
-      res.ok(
-        {
-          data: queryLogs,
-          meta: { ...paginate(pageNumber, pageLimit, queryLogs.length) },
-        },
+      res.ok(queryLogs,
         "Queries fetched successfully"
       );
     } catch (error) {
@@ -129,11 +125,34 @@ class QueryLogController {
             return res.ok(query._id, "Query executed successfully");
         }
 
-        res.unauthorized("You do not the right permisions to approve queries");
+        res.badRequest("You do not the right permisions to approve this query");
     } catch (error) {
       res.serverError(error);
     }
   };
+
+    /**
+   * @route GET /api/query/:id/run
+   * @desc Run an already created query
+   * @access Private
+   */
+    run = async (req: Request, res: Response) => {
+        const _id = req.params.id;
+        let queryResult;
+
+        try {    
+        const query = await queryLogService.getQueryLog({_id});
+        if (!query.isApproved) {
+            return res.badRequest("Query is not approved");
+        }
+
+        queryResult = await new QueryDbService(query.query).exec();
+
+        res.ok({query, result: queryResult}, "Query fetched successfully");
+        } catch (error) {
+        res.serverError(error);
+        }
+    };
 
 }
 
