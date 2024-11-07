@@ -1,77 +1,72 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
-import FormContainer from '../components/FormContainer';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLoginMutation } from '../slices/authApiSlice';
-import { setCredentials } from '../slices/authenticatedSlice';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { Form, Button } from "react-bootstrap"
+import FormContainer from "../components/FormContainer"
+import { useDispatch, useSelector } from "react-redux"
+import { useLoginMutation } from "../slices/authApiSlice"
+import { setCredentials } from "../slices/authenticatedSlice"
+import { toast } from "react-toastify"
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation()
 
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (userInfo) {
-      navigate('/query');
+      navigate("/query")
     }
-  }, [navigate, userInfo]);
+  }, [navigate, userInfo])
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const res = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ ...res }));
-      navigate('/query');
+      const res = await login({ email, password }).unwrap()
+      dispatch(setCredentials({ ...res }))
+      navigate("/query")
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error(err?.data?.message || err.error)
     }
-  };
+  }
 
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <Form.Group className='my-2' controlId='email'>
+        <Form.Group className="my-2" controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
-            type='email'
-            placeholder='Enter email'
+            type="email"
+            placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           ></Form.Control>
         </Form.Group>
 
-        <Form.Group className='my-2' controlId='password'>
+        <Form.Group className="my-2" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type='password'
-            placeholder='Enter password'
+            type="password"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           ></Form.Control>
         </Form.Group>
         <div className="d-grid gap-2">
-        <Button
-          disabled={isLoading}
-          type='submit'
-          variant='primary'
-          className='mt-3'
-        >
-          Login
-        </Button>
+          <Button disabled={isLoading} type="submit" variant="primary" className="mt-3">
+            Login
+          </Button>
         </div>
       </Form>
     </FormContainer>
-  );
-};
+  )
+}
 
-export default LoginScreen;
+export default LoginScreen

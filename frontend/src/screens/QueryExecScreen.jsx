@@ -1,81 +1,85 @@
-import { useState, useEffect } from 'react';
-import { Table, Button, Row, Col, Tab, Tabs, Stack, Container, Pagination } from 'react-bootstrap';
-import QueryCreateModal from '../components/modals/QueryCreateModal';
-import { useGetQueriesMutation, useRunQueryMutation, useApproveQueryMutation } from '../slices/queryApiSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { setQueryData } from '../slices/authenticatedSlice';
-import QueryRunModal from '../components/modals/QueryRunModal';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react"
+import { Table, Button, Row, Col, Tab, Tabs, Stack, Container, Pagination } from "react-bootstrap"
+import QueryCreateModal from "../components/modals/QueryCreateModal"
+import {
+  useGetQueriesMutation,
+  useRunQueryMutation,
+  useApproveQueryMutation,
+} from "../slices/queryApiSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { setQueryData } from "../slices/authenticatedSlice"
+import QueryRunModal from "../components/modals/QueryRunModal"
+import { toast } from "react-toastify"
 
 const QueryExecScreen = () => {
-  const [show, setShow] = useState(false);
-  const [allQueriesAwaitingApproval, setAllQueriesAwaitingApproval] = useState([]);
-  const [activeTab, setActiveTab] = useState('all-queries');
-  const { queryData, userInfo } = useSelector((state) => state.auth);
+  const [show, setShow] = useState(false)
+  const [allQueriesAwaitingApproval, setAllQueriesAwaitingApproval] = useState([])
+  const [activeTab, setActiveTab] = useState("all-queries")
+  const { queryData, userInfo } = useSelector((state) => state.auth)
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true)
+  const handleClose = () => setShow(false)
 
-  const [fetchAllQueries, { isLoading: isLoadingAllQueries }] = useGetQueriesMutation();
-  const dispatch = useDispatch();
+  const [fetchAllQueries, { isLoading: isLoadingAllQueries }] = useGetQueriesMutation()
+  const dispatch = useDispatch()
 
   const loadAllQueries = async (page = 1) => {
     try {
-      const queries = await fetchAllQueries({ page }).unwrap();
-      dispatch(setQueryData({ ...queries }));
+      const queries = await fetchAllQueries({ page }).unwrap()
+      dispatch(setQueryData({ ...queries }))
     } catch (error) {
-      console.error('Failed to load queries:', error);
+      console.error("Failed to load queries:", error)
     }
-  };
+  }
 
   const handleTabSelect = (key) => {
-    setActiveTab(key);
-    if (key === 'awaiting-approval') {
-      fetchAllQueriesAwaitingApproval();
+    setActiveTab(key)
+    if (key === "awaiting-approval") {
+      fetchAllQueriesAwaitingApproval()
     } else {
-      loadAllQueries();
+      loadAllQueries()
     }
-  };
+  }
 
   const fetchAllQueriesAwaitingApproval = async () => {
     try {
-      const queries = await fetchAllQueries({ isApproved: false }).unwrap();
-      setAllQueriesAwaitingApproval(queries.data.data);
+      const queries = await fetchAllQueries({ isApproved: false }).unwrap()
+      setAllQueriesAwaitingApproval(queries.data.data)
     } catch (error) {
-      console.error('Failed to load queries:', error);
+      console.error("Failed to load queries:", error)
     }
-  };
+  }
 
-  const [runAQuery,  { isLoading: isRunningQuery }] = useRunQueryMutation();
-  const [runQueryResult, setRunQueryResult] = useState(null);
-  const [showRunModal, setRunModal] = useState(false);
-  const handleShowRunModal = () => setRunModal(true);
-  const handleCloseRunModal = () => setRunModal(false);
+  const [runAQuery, { isLoading: isRunningQuery }] = useRunQueryMutation()
+  const [runQueryResult, setRunQueryResult] = useState(null)
+  const [showRunModal, setRunModal] = useState(false)
+  const handleShowRunModal = () => setRunModal(true)
+  const handleCloseRunModal = () => setRunModal(false)
 
   const runQuery = async (query) => {
     try {
-      const result = await runAQuery(query).unwrap();
-      setRunQueryResult(result.data.result);
-      handleShowRunModal();
-      toast.success(result.message);
+      const result = await runAQuery(query).unwrap()
+      setRunQueryResult(result.data.result)
+      handleShowRunModal()
+      toast.success(result.message)
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to run query");
+      toast.error(error?.data?.message || "Failed to run query")
     }
-  };
+  }
 
-  const [approveAQuery,  { isLoading: isApprovingQuery }] = useApproveQueryMutation();
+  const [approveAQuery, { isLoading: isApprovingQuery }] = useApproveQueryMutation()
   const approveQuery = async (query) => {
     try {
-      const res = await approveAQuery(query).unwrap();
-      toast.success(res.message);
-      fetchAllQueriesAwaitingApproval();
+      const res = await approveAQuery(query).unwrap()
+      toast.success(res.message)
+      fetchAllQueriesAwaitingApproval()
     } catch (error) {
-      toast.error(error?.data?.message || "Failed to approve query");
+      toast.error(error?.data?.message || "Failed to approve query")
     }
-  };
+  }
 
   // Generate pagination items based on total pages
-  const items = [];
+  const items = []
   for (let number = 1; number <= queryData.meta.pages; number++) {
     items.push(
       <Pagination.Item
@@ -85,30 +89,25 @@ const QueryExecScreen = () => {
         disabled={queryData.meta.pages === 1}
       >
         {number}
-      </Pagination.Item>
-    );
-  };
+      </Pagination.Item>,
+    )
+  }
 
   useEffect(() => {
-    loadAllQueries();
-  }, [fetchAllQueries]);
+    loadAllQueries()
+  }, [fetchAllQueries])
 
   return (
     <>
       <Container>
-        <Row className='mt-2'>
-          <Col className='p-5'>
-            <Stack direction="horizontal" gap={3} className='pb-3'>
-              <div className='pb-2'>
+        <Row className="mt-2">
+          <Col className="p-5">
+            <Stack direction="horizontal" gap={3} className="pb-3">
+              <div className="pb-2">
                 <h5>Query List</h5>
               </div>
               <div className="ms-auto">
-                <Button
-                  type='button'
-                  variant='primary'
-                  size="sm"
-                  onClick={handleShow}
-                >
+                <Button type="button" variant="primary" size="sm" onClick={handleShow}>
                   New Query
                 </Button>
               </div>
@@ -129,7 +128,9 @@ const QueryExecScreen = () => {
                   <tbody>
                     {isLoadingAllQueries ? (
                       <tr>
-                        <td colSpan="4" className="text-center">Loading...</td>
+                        <td colSpan="4" className="text-center">
+                          Loading...
+                        </td>
                       </tr>
                     ) : (
                       queryData.data.map((query, index) => (
@@ -141,8 +142,8 @@ const QueryExecScreen = () => {
                           <td>
                             {query.isApproved && (
                               <Button
-                                type='button'
-                                variant='primary'
+                                type="button"
+                                variant="primary"
                                 size="sm"
                                 onClick={() => runQuery(query)}
                                 disabled={isRunningQuery}
@@ -157,8 +158,8 @@ const QueryExecScreen = () => {
                   </tbody>
                 </Table>
                 {queryData.data.length > 0 && (
-                  <Stack direction="horizontal" gap={3} className='pb-3'>
-                    <div className='pb-2'>
+                  <Stack direction="horizontal" gap={3} className="pb-3">
+                    <div className="pb-2">
                       <h6>Pages:</h6>
                     </div>
                     <div className="ms-auto">
@@ -183,7 +184,9 @@ const QueryExecScreen = () => {
                   <tbody>
                     {isLoadingAllQueries ? (
                       <tr>
-                        <td colSpan="4" className="text-center">Loading...</td>
+                        <td colSpan="4" className="text-center">
+                          Loading...
+                        </td>
                       </tr>
                     ) : (
                       allQueriesAwaitingApproval.map((query, index) => (
@@ -193,10 +196,12 @@ const QueryExecScreen = () => {
                           <td>{query.query}</td>
                           <td>{new Date(query.createdAt).toLocaleString()}</td>
                           <td>
-                            {userInfo.permissions.includes(`APPROVE_${query.type.toUpperCase()}`) && (
+                            {userInfo.permissions.includes(
+                              `APPROVE_${query.type.toUpperCase()}`,
+                            ) && (
                               <Button
-                                type='button'
-                                variant='primary'
+                                type="button"
+                                variant="primary"
                                 size="sm"
                                 onClick={() => approveQuery(query)}
                                 disabled={isApprovingQuery}
@@ -215,11 +220,15 @@ const QueryExecScreen = () => {
           </Col>
         </Row>
       </Container>
-      
-      <QueryCreateModal show={show} handleClose={handleClose} />
-      <QueryRunModal show={showRunModal} handleClose={handleCloseRunModal} queryResult={runQueryResult} />
-    </>
-  );
-};
 
-export default QueryExecScreen;
+      <QueryCreateModal show={show} handleClose={handleClose} />
+      <QueryRunModal
+        show={showRunModal}
+        handleClose={handleCloseRunModal}
+        queryResult={runQueryResult}
+      />
+    </>
+  )
+}
+
+export default QueryExecScreen
