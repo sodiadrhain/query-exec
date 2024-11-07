@@ -12,6 +12,14 @@ It includes the following:
 - React Bootstrap UI library
 - React Toastify notifications
 
+<img src="./frontend/public/homepage.png" />
+....
+<img src="./frontend/public/dashboard.png" />
+....
+<img src="./frontend/public/create-query.png" />
+....
+<img src="./frontend/public/result.png" />
+
 
 ### Env Variables
 
