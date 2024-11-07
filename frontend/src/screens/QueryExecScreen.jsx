@@ -57,6 +57,7 @@ const QueryExecScreen = () => {
       const result = await runAQuery(query).unwrap();
       setRunQueryResult(result.data.result);
       handleShowRunModal();
+      toast.success(result.message);
     } catch (error) {
       toast.error(error?.data?.message || "Failed to run query");
     }
@@ -65,7 +66,8 @@ const QueryExecScreen = () => {
   const [approveAQuery,  { isLoading: isApprovingQuery }] = useApproveQueryMutation();
   const approveQuery = async (query) => {
     try {
-      await approveAQuery(query).unwrap();
+      const res = await approveAQuery(query).unwrap();
+      toast.success(res.message);
       fetchAllQueriesAwaitingApproval();
     } catch (error) {
       toast.error(error?.data?.message || "Failed to approve query");
