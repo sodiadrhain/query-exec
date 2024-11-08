@@ -20,6 +20,12 @@ It includes the following:
 ....
 <img src="./frontend/public/result.png" />
 
+### API Documentation -- [See on Postman](https://documenter.getpostman.com/view/13841071/2sAY51A1EX)
+
+```
+# Running documentation locally
+- Goto the Postman link above, and on the top right, Click on "Run in Postman", make sure you have postman running locally
+```
 
 ### Env Variables
 

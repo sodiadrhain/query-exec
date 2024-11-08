@@ -18,7 +18,7 @@ class UserController {
         return res.notFound("User not found");
       }
 
-      res.created(user, "User profile fetched successfully");
+      res.ok(user, "User profile fetched successfully");
     } catch (error) {
       res.serverError(error);
     }
@@ -41,16 +41,16 @@ class UserController {
         return res.notFound("User not found");
       }
 
-      if (user._id !== req.user.userId) {
+      if (String(user._id) !== req.user.userId) {
         return res.unauthorized("You do not have access to this action");
       }
 
       const updatedUser = await userService.updateUser(user, {
         fullName,
-        password: hashPassword(password),
+        password: password ? hashPassword(password) : user.password,
       });
-
-      res.ok(updatedUser, "User profile updated successfully");
+      updatedUser.password = undefined;
+      res.ok(null, "User profile updated successfully");
     } catch (error) {
       res.serverError(error);
     }
