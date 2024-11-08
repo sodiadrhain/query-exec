@@ -10,7 +10,7 @@ export const generateToken = (res: Response, user: IUser): string => {
   const token = jwt.sign(
     {
       userId: user._id,
-      username: user.email,
+      email: user.email,
     },
     JWT.SECRET,
     {

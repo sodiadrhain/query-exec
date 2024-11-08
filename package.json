@@ -4,7 +4,7 @@
   "description": "App to execute queries",
   "main": "index.js",
   "scripts": {
-    "start": "cd frontend && npm run build && cd ../ && node backend/server.ts",
+    "start": "cd frontend && npm run build && cd ../ && tsc && node -r ts-node/register/transpile-only .dist/backend/server.js",
     "server": "nodemon backend/server.ts",
     "client": "npm run dev --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
